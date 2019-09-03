@@ -22,8 +22,13 @@ public class Task {
         System.out.println("[" + this.getStatusIcon() + "] " + this.task);
     }
 
-    public void listOutput() {
+    /*public void listOutput() {
         System.out.println("[" + this.getStatusIcon() + "] " + this.task);
+    }*/
+
+    @Override
+    public String toString() {
+        return "[" + this.getStatusIcon() + "] " + this.task;
     }
 
 }
