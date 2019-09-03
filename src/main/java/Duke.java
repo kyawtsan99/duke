@@ -61,7 +61,7 @@ public class Duke {
                         System.out.println(LINE);
                         break;
 
-                        // to do
+                    // to do
                     case "todo":
                         Todo newTodo = new Todo(secondWord);
                         arr.add(newTodo);
@@ -80,7 +80,7 @@ public class Duke {
                         System.out.println(LINE);
                         break;
 
-                        // deadline
+                    // deadline
                     case "deadline":
                         String[] splitDeadlineArr = secondWord.split("/", 2); // splits the string by the "/"
                         String deadlineTask = splitDeadlineArr[0];
@@ -103,7 +103,7 @@ public class Duke {
                         System.out.println(LINE);
                         break;
 
-                        // event
+                    // event
                     case "event":
                         String[] splitEventArr = secondWord.split("/", 2); // splits the string by the "/"
                         String eventTask = splitEventArr[0];
