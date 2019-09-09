@@ -84,7 +84,7 @@ public class Duke {
                         } else {
                             String done = splitArr[0];
                             String doneNumString = splitArr[1];
-                            int doneNum = Integer.parseInt(doneNumString); // converts string into
+                            int doneNum = Integer.parseInt(doneNumString); // converts string into number
                             if (doneNum > arr.size() || doneNum < 0) {
                                 throw new IndexOutOfBoundsException();
                             } else {
@@ -254,12 +254,24 @@ public class Duke {
                         }
                     }
 
+                    // PRINT the text file
                     else if (userInput.startsWith("print")) {
                         try {
                             readFile();
                         } catch (FileNotFoundException e) {
                             System.out.println("File not found");
                         }
+                    }
+
+                    // DELETE
+                    else if (userInput.startsWith("delete")) {
+                        int deleteNum = Integer.parseInt(splitArr[1]); // converts string into
+                        System.out.println(LINE);
+                        System.out.println("Noted. I've removed this task:");
+                        System.out.println(arr.get(deleteNum - 1).toString());
+                        System.out.println("Now you have " + (arr.size() - 1) + " tasks in the list." );
+                        System.out.println(LINE);
+                        arr.remove(deleteNum - 1);
                     }
 
                     // Other non-valid commands
