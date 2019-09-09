@@ -1,13 +1,12 @@
+import java.text.ParseException;
 import java.util.Scanner; // Import the Scanner class
 import java.io.*;
 import java.util.ArrayList;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
 
 
 public class Duke {
@@ -16,46 +15,18 @@ public class Duke {
     private static final String LINE = "____________________________________________________________ \n";
     private static ArrayList<Task> arr = new ArrayList<Task>(); // Creating array list
 
-
-    private static void saveFile() {
-        try {
-            FileOutputStream savedFile = new FileOutputStream("C:\\Users\\sanwy\\duke\\src\\main\\java\\SavedFile.txt");
-            ObjectOutputStream save = new ObjectOutputStream(savedFile);
-            save.writeObject(arr);
-            save.close();
-            savedFile.close();
-
-            System.out.println("File successfully saved!");
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
+    private static void readFile() throws FileNotFoundException {
+        File f = new File("C:\\Users\\sanwy\\duke\\src\\main\\java\\SavedFile.txt"); // create a File for the given file path
+        Scanner s = new Scanner(f); // create a Scanner using the File as the source
+        while (s.hasNext()) {
+            System.out.println(s.nextLine());
         }
     }
 
-    private static void readFile() {
-        try {
-            FileInputStream savedFile1 = new FileInputStream("C:\\Users\\sanwy\\duke\\src\\main\\java\\SavedFile.txt");
-            ObjectInputStream save1 = new ObjectInputStream(savedFile1);
-            arr = (ArrayList) save1.readObject();
-
-            save1.close();
-            savedFile1.close();
-
-            /*for (int i = 0; i < arr.size(); i++) {
-                System.out.println(arr.get(i).toString()); // iterates through the entire array
-            }*/
-            System.out.println("File successfully read!");
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    private static void writeToFile(String textToAdd) throws IOException {
+        FileWriter file = new FileWriter("C:\\Users\\sanwy\\duke\\src\\main\\java\\SavedFile.txt");
+        file.write(textToAdd);
+        file.close();
     }
 
     public static void main(String[] args) throws Exception {
@@ -69,7 +40,6 @@ public class Duke {
 
         Scanner input = new Scanner(System.in); // Create a Scanner object
         boolean stringComparison = true;
-        readFile();
 
             while (stringComparison) {
                 String userInput = input.nextLine();
@@ -112,7 +82,6 @@ public class Duke {
                                 System.out.println(arr.get(doneNum - 1).toString());
                                 System.out.println(LINE);
                             }
-                            saveFile();
                         }
                     }
 
@@ -147,7 +116,13 @@ public class Duke {
 
                                 Todo newTodo = new Todo(secondWord);
                                 arr.add(newTodo);
-                                //saveFile(arr);
+
+                                // Write to SavedFile.txt file
+                                try {
+                                    writeToFile("T | " + newTodo.getStatusIcon() + " | " + secondWord);
+                                } catch (IOException e) {
+                                    System.out.println("Something went wrong: " + e.getMessage());
+                                }
 
                                 System.out.println(LINE);
                                 System.out.println("Got it. I've added this task:");
@@ -161,7 +136,6 @@ public class Duke {
                                     System.out.println("Now you have " + arr.size() + " tasks in the list.");
                                 }
                                 System.out.println(LINE);
-                                saveFile();
                             }
                         }
 
@@ -188,9 +162,26 @@ public class Duke {
                                 String deadlineTask = splitDeadlineArr[0];
                                 String[] splitDeadlineArr1 = splitDeadlineArr[1].split(" ", 2); // splits the string by the " "
                                 String deadlineDate = splitDeadlineArr1[1];
+
                                 Deadline newDeadline = new Deadline(deadlineTask, deadlineDate);
                                 arr.add(newDeadline);
-                                //saveFile(arr);
+
+                                // Write to SavedFile.txt file
+                                try {
+                                    writeToFile("D | " + newDeadline.getStatusIcon() + " | " + deadlineTask + " | " + deadlineDate);
+                                } catch (IOException e) {
+                                    System.out.println("Something went wrong: " + e.getMessage());
+                                }
+
+                                /*Changing the format of the date to dd/MM/yyyy
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                 try {
+                                     Date date = formatter.parse(deadlineDate);
+                                     Deadline newDeadline = new Deadline(deadlineTask, date);
+                                     arr.add(newDeadline);                                 }
+                                 catch (ParseException e) {
+                                     e.printStackTrace();
+                                 }*/
 
                                 System.out.println(LINE);
                                 System.out.println("Got it. I've added this task:");
@@ -204,7 +195,6 @@ public class Duke {
                                     System.out.println("Now you have " + arr.size() + " tasks in the list.");
                                 }
                                 System.out.println(LINE);
-                                saveFile();
                             }
                         }
 
@@ -232,7 +222,13 @@ public class Duke {
                                 String eventDate = splitEventArr1[1];
                                 Event newEvent = new Event(eventTask, eventDate);
                                 arr.add(newEvent);
-                                //saveFile(arr);
+
+                                // Write to SavedFile.txt file
+                                try {
+                                    writeToFile("D | " + newEvent.getStatusIcon() + " | " + eventTask + " | " + eventDate);
+                                } catch (IOException e) {
+                                    System.out.println("Something went wrong: " + e.getMessage());
+                                }
 
                                 System.out.println(LINE);
                                 System.out.println("Got it. I've added this task:");
@@ -246,8 +242,6 @@ public class Duke {
                                     System.out.println("Now you have " + arr.size() + " tasks in the list.");
                                 }
                                 System.out.println(LINE);
-                                saveFile();
-
                             }
                         }
 
@@ -256,6 +250,14 @@ public class Duke {
                             System.out.println(LINE);
                             e.exceptionPrint(userInput);
                             System.out.println(LINE);
+                        }
+                    }
+
+                    else if (userInput.startsWith("print")) {
+                        try {
+                            readFile();
+                        } catch (FileNotFoundException e) {
+                            System.out.println("File not found");
                         }
                     }
 
