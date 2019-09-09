@@ -170,10 +170,9 @@ public class Duke {
                                 String firstWord = splitArr[0]; // obtains the first word of the string
                                 String secondWord = splitArr[1]; // obtains the rest of the word
 
-                                String[] splitDeadlineArr = secondWord.split("/", 2); // splits the string by the "/"
+                                String[] splitDeadlineArr = secondWord.split(" /by ", 2); // splits the string by the "/"
                                 String deadlineTask = splitDeadlineArr[0];
-                                String[] splitDeadlineArr1 = splitDeadlineArr[1].split(" ", 2); // splits the string by the " "
-                                String deadlineDate = splitDeadlineArr1[1];
+                                String deadlineDate = splitDeadlineArr[1];
 
                                 Deadline newDeadline = new Deadline(deadlineTask, deadlineDate);
                                 arr.add(newDeadline);
@@ -184,16 +183,6 @@ public class Duke {
                                 } catch (IOException e) {
                                     System.out.println("Something went wrong: " + e.getMessage());
                                 }
-
-                                /*Changing the format of the date to dd/MM/yyyy
-                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                                 try {
-                                     Date date = formatter.parse(deadlineDate);
-                                     Deadline newDeadline = new Deadline(deadlineTask, date);
-                                     arr.add(newDeadline);                                 }
-                                 catch (ParseException e) {
-                                     e.printStackTrace();
-                                 }*/
 
                                 System.out.println(LINE);
                                 System.out.println("Got it. I've added this task:");
