@@ -6,7 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class Duke {
@@ -24,8 +25,14 @@ public class Duke {
     }
 
     private static void writeToFile(String textToAdd) throws IOException {
-        FileWriter file = new FileWriter("C:\\Users\\sanwy\\duke\\src\\main\\java\\SavedFile.txt");
-        file.write(textToAdd);
+        FileWriter file = new FileWriter("C:\\Users\\sanwy\\duke\\src\\main\\java\\SavedFile.txt", true); // include append so that different tasks can be written
+        file.write(textToAdd + "\n");
+        file.close();
+    }
+
+    private static void clearFIle() throws IOException {
+        FileWriter file = new FileWriter("C:\\Users\\sanwy\\duke\\src\\main\\java\\SavedFile.txt"); // include append so that different tasks can be written
+        file.write("");
         file.close();
     }
 
@@ -49,6 +56,11 @@ public class Duke {
                     System.out.println(LINE);
                     System.out.println("Bye. Hope to see you again soon!");
                     System.out.println(LINE);
+                    try {
+                        clearFIle(); // clears the SavedFile.txt file so that a new list can be written.
+                    } catch (IOException e) {
+                        System.out.println("Something went wrong: " + e.getMessage());
+                    }
                     stringComparison = false; // exits the loop
                 }
 
