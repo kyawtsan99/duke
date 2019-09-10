@@ -254,11 +254,34 @@ public class Duke {
                         }
                     }
 
+                    // PRINT the text file
                     else if (userInput.startsWith("print")) {
                         try {
                             readFile();
                         } catch (FileNotFoundException e) {
                             System.out.println("File not found");
+                        }
+                    }
+
+                    // FIND
+                    else if (userInput.startsWith("find")) {
+                        String secondWord = splitArr[1]; // obtains the rest of the word
+                        ArrayList<Task> matched = new ArrayList<Task>(); // creates an array to store matched words
+                        for (Task i : arr) { // iterates through the entire array
+                            if (arr.toString().contains(secondWord)) {
+                                matched.add(i);
+                            }
+                        }
+                        if (!matched.isEmpty()) {
+                            System.out.println(LINE);
+                            System.out.println("Here are the matching tasks in your list:");
+                            for (int i = 0; i < arr.size(); i++) {
+                                System.out.println((i + 1) + ". " + matched.get(i).toString()); // iterates through the entire array
+                            }
+                            System.out.println(LINE);
+                        }
+                        else {
+                            System.out.println("There are no matching tasks in your list. ☹");
                         }
                     }
 
