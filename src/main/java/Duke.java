@@ -82,7 +82,7 @@ public class Duke {
                         if (splitArr.length == 1) {
                             throw new noInfoCommandException();
                         } else {
-                            String done = splitArr[0];
+                            //String done = splitArr[0];
                             String doneNumString = splitArr[1];
                             int doneNum = Integer.parseInt(doneNumString); // converts string into number
                             if (doneNum > arr.size() || doneNum < 0) {
@@ -269,9 +269,31 @@ public class Duke {
                         System.out.println(LINE);
                         System.out.println("Noted. I've removed this task:");
                         System.out.println(arr.get(deleteNum - 1).toString());
-                        System.out.println("Now you have " + (arr.size() - 1) + " tasks in the list." );
+                        System.out.println("Now you have " + (arr.size() - 1) + " tasks in the list.");
                         System.out.println(LINE);
                         arr.remove(deleteNum - 1);
+                    }
+
+                    // FIND
+                    else if (userInput.startsWith("find")) {
+                        String secondWord = splitArr[1]; // obtains the rest of the word
+                        ArrayList<Task> matched = new ArrayList<Task>(); // creates an array to store matched words
+                        for (Task i : arr) { // iterates through the entire array
+                            if (arr.toString().contains(secondWord)) {
+                                matched.add(i);
+                            }
+                        }
+                        if (!matched.isEmpty()) {
+                            System.out.println(LINE);
+                            System.out.println("Here are the matching tasks in your list:");
+                            for (int i = 0; i < arr.size(); i++) {
+                                System.out.println((i + 1) + ". " + matched.get(i).toString()); // iterates through the entire array
+                            }
+                            System.out.println(LINE);
+                        }
+                        else {
+                            System.out.println("There are no matching tasks in your list. ☹");
+                        }
                     }
 
                     // Other non-valid commands

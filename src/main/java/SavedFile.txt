@@ -1,3 +1,6 @@
 T | ✘ | return book
 T | ✘ | borrow book
 T | ✘ | hello
+T | ✘ | read book
+D | ✘ | return book | 02/06/2018 1200
+
