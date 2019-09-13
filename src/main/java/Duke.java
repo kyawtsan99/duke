@@ -1,13 +1,9 @@
-import java.text.ParseException;
 import java.util.Scanner; // Import the Scanner class
-import java.io.*;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
 public class Duke {
@@ -36,7 +32,7 @@ public class Duke {
         file.close();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
                 + "| | | | | | | |/ / _ \\\n"
@@ -49,78 +45,73 @@ public class Duke {
         boolean stringComparison = true;
 
             while (stringComparison) {
+
                 String userInput = input.nextLine();
-
-                // BYE
-                if (userInput.equals("bye")) {
-                    System.out.println(LINE);
-                    System.out.println("Bye. Hope to see you again soon!");
-                    System.out.println(LINE);
-                    try {
-                        clearFIle(); // clears the SavedFile.txt file so that a new list can be written.
-                    } catch (IOException e) {
-                        System.out.println("Something went wrong: " + e.getMessage());
+                try {
+                    // BYE
+                    if (userInput.equals("bye")) {
+                        System.out.println(LINE);
+                        System.out.println("Bye. Hope to see you again soon!");
+                        System.out.println(LINE);
+                        try {
+                            clearFIle(); // clears the SavedFile.txt file so that a new list can be written.
+                        } catch (IOException e) {
+                            System.out.println("Something went wrong: " + e.getMessage());
+                        }
+                        stringComparison = false; // exits the loop
                     }
-                    stringComparison = false; // exits the loop
-                }
 
-                // LIST
-                else if (userInput.equals("list")) {
-                    System.out.println(LINE);
-                    System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < arr.size(); i++) {
-                        System.out.println((i + 1) + ". " + arr.get(i).toString()); // iterates through the entire array
+                    // LIST
+                    else if (userInput.equals("list")) {
+                        System.out.println(LINE);
+                        System.out.println("Here are the tasks in your list:");
+                        for (int i = 0; i < arr.size(); i++) {
+                            System.out.println((i + 1) + ". " + arr.get(i).toString()); // iterates through the entire array
+                        }
+                        System.out.println(LINE);
                     }
-                    System.out.println(LINE);
-                }
 
-                // DONE
-                else if (userInput.startsWith("done")) {
-                    String[] splitArr = userInput.split(" ");
+                    // DONE
+                    else if (userInput.startsWith("done")) {
+                        String[] splitArr = userInput.split(" ");
 
-                    try {
-                        if (splitArr.length == 1) {
-                            throw new noInfoCommandException();
-                        } else {
-                            //String done = splitArr[0];
-                            String doneNumString = splitArr[1];
-                            int doneNum = Integer.parseInt(doneNumString); // converts string into number
-                            if (doneNum > arr.size() || doneNum < 0) {
-                                throw new IndexOutOfBoundsException();
+                        try {
+                            if (splitArr.length == 1) {
+                                throw new NoInfoCommandException("done");
                             } else {
-                                arr.get(doneNum - 1).taskIsDone();
-                                System.out.println(LINE);
-                                System.out.println("Nice! I've marked this task as done:");
-                                System.out.println(arr.get(doneNum - 1).toString());
-                                System.out.println(LINE);
+                                //String done = splitArr[0];
+                                String doneNumString = splitArr[1];
+                                int doneNum = Integer.parseInt(doneNumString); // converts string into number
+                                if (doneNum > arr.size() || doneNum < 0) {
+                                    throw new IndexOutOfBoundsException();
+                                } else {
+                                    arr.get(doneNum - 1).taskIsDone();
+                                    System.out.println(LINE);
+                                    System.out.println("Nice! I've marked this task as done:");
+                                    System.out.println(arr.get(doneNum - 1).toString());
+                                    System.out.println(LINE);
+                                }
                             }
+                        }
+
+
+                        // If the number written after done exceeds the number of tasks or is a negative number.
+                        catch (IndexOutOfBoundsException e) {
+                            System.out.println(LINE);
+                            System.out.println("☹ OOPS!!! The number you indicated is out of bounds.");
+                            System.out.println(LINE);
                         }
                     }
 
-                    // If nothing is written after done.
-                    catch (noInfoCommandException e) {
-                        System.out.println(LINE);
-                        e.exceptionPrint(userInput);
-                        System.out.println(LINE);
-                    }
+                    // TASKS
+                    else {
+                        String[] splitArr = userInput.split(" "); // splits the string by the white spaces
 
-                    // If the number written after done exceeds the number of tasks or is a negative number.
-                    catch (IndexOutOfBoundsException e) {
-                        System.out.println(LINE);
-                        System.out.println("☹ OOPS!!! The number you indicated is out of bounds.");
-                        System.out.println(LINE);
-                    }
-                }
+                        //TO DO
+                        if (userInput.startsWith("todo")) {
 
-                // TASKS
-                else {
-                    String[] splitArr = userInput.split(" "); // splits the string by the white spaces
-
-                    //TO DO
-                    if (userInput.startsWith("todo")) {
-                        try {
                             if (splitArr.length == 1) {
-                                throw new noInfoCommandException();
+                                throw new NoInfoCommandException("todo");
                             } else {
                                 splitArr = userInput.split(" ", 2); // splits the string by the white spaces
                                 String firstWord = splitArr[0]; // obtains the first word of the string
@@ -149,22 +140,16 @@ public class Duke {
                                 }
                                 System.out.println(LINE);
                             }
+
+
                         }
 
-                        // If nothing is written after to do.
-                        catch (noInfoCommandException e) {
-                            System.out.println(LINE);
-                            e.exceptionPrint(userInput);
-                            System.out.println(LINE);
-                        }
-                    }
+                        // DEADLINE
+                        else if (userInput.startsWith("deadline")) {
 
-                    // DEADLINE
-                    else if (userInput.startsWith("deadline")) {
 
-                        try {
                             if (splitArr.length == 1) {
-                                throw new noInfoCommandException();
+                                throw new NoInfoCommandException("deadline");
                             } else {
                                 splitArr = userInput.split(" ", 2); // splits the string by the white spaces
                                 String firstWord = splitArr[0]; // obtains the first word of the string
@@ -197,21 +182,15 @@ public class Duke {
                                 }
                                 System.out.println(LINE);
                             }
+
+
                         }
 
-                        // If nothing is written after deadline.
-                        catch (noInfoCommandException e) {
-                            System.out.println(LINE);
-                            e.exceptionPrint(userInput);
-                            System.out.println(LINE);
-                        }
-                    }
+                        // EVENT
+                        else if (userInput.startsWith("event")) {
 
-                    // EVENT
-                    else if (userInput.startsWith("event")) {
-                        try {
                             if (splitArr.length == 1) {
-                                throw new noInfoCommandException();
+                                throw new NoInfoCommandException("event");
                             } else {
                                 splitArr = userInput.split(" ", 2); // splits the string by the white spaces
                                 String firstWord = splitArr[0]; // obtains the first word of the string
@@ -244,66 +223,64 @@ public class Duke {
                                 }
                                 System.out.println(LINE);
                             }
+
                         }
 
-                        // If nothing is written after event.
-                        catch (noInfoCommandException e) {
-                            System.out.println(LINE);
-                            e.exceptionPrint(userInput);
-                            System.out.println(LINE);
-                        }
-                    }
-
-                    // PRINT the text file
-                    else if (userInput.startsWith("print")) {
-                        try {
-                            readFile();
-                        } catch (FileNotFoundException e) {
-                            System.out.println("File not found");
-                        }
-                    }
-
-                    // DELETE
-                    else if (userInput.startsWith("delete")) {
-                        int deleteNum = Integer.parseInt(splitArr[1]); // converts string into
-                        System.out.println(LINE);
-                        System.out.println("Noted. I've removed this task:");
-                        System.out.println(arr.get(deleteNum - 1).toString());
-                        System.out.println("Now you have " + (arr.size() - 1) + " tasks in the list.");
-                        System.out.println(LINE);
-                        arr.remove(deleteNum - 1);
-                    }
-
-                    // FIND
-                    else if (userInput.startsWith("find")) {
-                        String secondWord = splitArr[1]; // obtains the rest of the word
-                        ArrayList<Task> matched = new ArrayList<Task>(); // creates an array to store matched words
-                        for (Task i : arr) { // iterates through the entire array
-                            if (arr.toString().contains(secondWord)) {
-                                matched.add(i);
+                        // PRINT the text file
+                        else if (userInput.startsWith("print")) {
+                            try {
+                                readFile();
+                            } catch (FileNotFoundException e) {
+                                System.out.println("File not found");
                             }
                         }
-                        if (!matched.isEmpty()) {
+
+                        // DELETE
+                        else if (userInput.startsWith("delete")) {
+                            int deleteNum = Integer.parseInt(splitArr[1]); // converts string into
                             System.out.println(LINE);
-                            System.out.println("Here are the matching tasks in your list:");
-                            for (int i = 0; i < arr.size(); i++) {
-                                System.out.println((i + 1) + ". " + matched.get(i).toString()); // iterates through the entire array
-                            }
+                            System.out.println("Noted. I've removed this task:");
+                            System.out.println(arr.get(deleteNum - 1).toString());
+                            System.out.println("Now you have " + (arr.size() - 1) + " tasks in the list.");
                             System.out.println(LINE);
+                            arr.remove(deleteNum - 1);
                         }
+
+                        // FIND
+                        else if (userInput.startsWith("find")) {
+                            String secondWord = splitArr[1]; // obtains the rest of the word
+                            ArrayList<Task> matched = new ArrayList<Task>(); // creates an array to store matched words
+                            for (Task i : arr) { // iterates through the entire array
+                                if (arr.toString().contains(secondWord)) {
+                                    matched.add(i);
+                                }
+                            }
+                            if (!matched.isEmpty()) {
+                                System.out.println(LINE);
+                                System.out.println("Here are the matching tasks in your list:");
+                                for (int i = 0; i < arr.size(); i++) {
+                                    System.out.println((i + 1) + ". " + matched.get(i).toString()); // iterates through the entire array
+                                }
+                                System.out.println(LINE);
+                            } else {
+                                System.out.println("There are no matching tasks in your list. ☹");
+                            }
+                        }
+
+                        // Other non-valid commands
                         else {
-                            System.out.println("There are no matching tasks in your list. ☹");
+                            System.out.println(LINE);
+                            System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
+                            System.out.println(LINE);
                         }
-                    }
-
-                    // Other non-valid commands
-                    else {
-                        System.out.println(LINE);
-                        System.out.println("☹ OOPS!!! I'm sorry, but I don't know what that means :-(");
-                        System.out.println(LINE);
                     }
                 }
-
+                // If nothing is written after done.
+                catch (NoInfoCommandException e) {
+                    System.out.println(LINE);
+                    System.out.println(e.getMessage());
+                    System.out.println(LINE);
+                }
         }
     }
 }
